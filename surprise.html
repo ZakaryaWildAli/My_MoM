@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌸✨مفاجأة مميزة للأمي </title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Dancing+Script:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow: hidden;
+            background: linear-gradient(135deg, #1a0033 0%, #2d0a4e 25%, #4a0e78 50%, #2d0a4e 75%, #1a0033 100%);
+            font-family: 'Playfair Display', serif;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* Fireworks Canvas */
+        #fireworksCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* Flowers Canvas */
+        #flowersCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* Confetti Canvas */
+        #confettiCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* Message Container */
+        .message-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 3;
+            text-align: center;
+            animation: fadeInScale 2s ease-out forwards;
+            opacity: 0;
+            padding: 0 1rem;
+            max-width: 90%;
+        }
+
+        @keyframes fadeInScale {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .message-container h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(2.5rem, 8vw, 6rem);
+            color: #FFD700;
+            text-shadow: 
+                0 0 10px rgba(255, 215, 0, 0.8),
+                0 0 20px rgba(255, 215, 0, 0.6),
+                0 0 30px rgba(255, 215, 0, 0.4),
+                2px 2px 5px rgba(0, 0, 0, 0.5);
+            margin-bottom: 1rem;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 
+                    0 0 10px rgba(255, 215, 0, 0.8),
+                    0 0 20px rgba(255, 215, 0, 0.6),
+                    0 0 30px rgba(255, 215, 0, 0.4),
+                    2px 2px 5px rgba(0, 0, 0, 0.5);
+            }
+            to {
+                text-shadow: 
+                    0 0 20px rgba(255, 215, 0, 1),
+                    0 0 30px rgba(255, 215, 0, 0.8),
+                    0 0 40px rgba(255, 215, 0, 0.6),
+                    0 0 50px rgba(255, 182, 193, 0.4),
+                    2px 2px 5px rgba(0, 0, 0, 0.5);
+            }
+        }
+
+        .message-container p {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            color: #FFB6C1;
+            text-shadow: 
+                0 0 10px rgba(255, 182, 193, 0.6),
+                2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+
+        .hearts {
+            font-size: clamp(2rem, 5vw, 4rem);
+            animation: heartBeat 1.5s infinite;
+            display: inline-block;
+        }
+
+        @keyframes heartBeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.2); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.1); }
+        }
+
+        /* Back Button */
+        .back-button {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 4;
+            padding: 1rem 2rem;
+            background: rgba(255, 215, 0, 0.2);
+            border: 2px solid #FFD700;
+            color: #FFD700;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            backdrop-filter: blur(10px);
+            animation: fadeIn 3s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .back-button:hover {
+            background: rgba(255, 215, 0, 0.4);
+            transform: translateX(-50%) translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.5);
+        }
+
+        .back-button:active {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Music Control Button */
+        .music-control {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #FFD700 0%, #FF69B4 100%);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .music-control:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+        }
+
+        .music-control:active {
+            transform: scale(0.95);
+        }
+
+        .music-control.playing {
+            animation: musicPulse 1s infinite;
+        }
+
+        @keyframes musicPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Sparkles */
+        .sparkle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #FFD700;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            pointer-events: none;
+            z-index: 2;
+            animation: sparkleFloat 4s linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes sparkleFloat {
+            0% {
+                transform: translateY(100vh) rotate(0deg) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* Floating particles */
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #FFD700;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            animation: float 6s infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(20px);
+                opacity: 0;
+            }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .message-container {
+                padding: 0 1.5rem;
+            }
+
+            .back-button {
+                bottom: 20px;
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+            }
+
+            .music-control {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+                bottom: 20px;
+                right: 20px;
+            }
+
+            /* Reduce particle count on mobile for performance */
+            .sparkle:nth-child(n+11) {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .message-container {
+                padding: 0 1rem;
+            }
+
+            .message-container h1 {
+                font-size: 2rem;
+            }
+
+            .message-container p {
+                font-size: 1rem;
+            }
+
+            .hearts {
+                font-size: 1.5rem;
+            }
+
+            .back-button {
+                padding: 0.7rem 1.2rem;
+                font-size: 0.9rem;
+            }
+
+            /* Further reduce effects on small screens */
+            .sparkle:nth-child(n+8) {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Music -->
+    <audio id="backgroundMusic" loop>
+        <source src="song.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Music Control Button -->
+    <button class="music-control" id="musicControl">
+        <i>🎵</i>
+    </button>
+
+    <!-- Fireworks Canvas -->
+    <canvas id="fireworksCanvas"></canvas>
+
+    <!-- Flowers Canvas -->
+    <canvas id="flowersCanvas"></canvas>
+
+    <!-- Confetti Canvas -->
+    <canvas id="confettiCanvas"></canvas>
+
+    <!-- Message -->
+    <div class="message-container">
+        <h1>يا محبوبتي</h1>
+        <p>شكراً لكِ على كونكِ الأم الأجمل في العالم</p>
+        <div class="hearts">❤️ 🌸🌸 ❤️</div>
+    </div>
+
+    
+    <script>
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        const musicControl = document.getElementById('musicControl');
+        const isMobile = window.innerWidth <= 768;
+        const isSmallMobile = window.innerWidth <= 480;
+
+        // Resume music from where it left off
+        window.addEventListener('load', () => {
+            if (sessionStorage.getItem('musicPlaying') === 'true') {
+                const savedTime = parseFloat(sessionStorage.getItem('musicTime')) || 0;
+                backgroundMusic.currentTime = savedTime;
+                backgroundMusic.play().then(() => {
+                    musicControl.classList.add('playing');
+                }).catch(() => {
+                    document.addEventListener('click', function playOnce() {
+                        backgroundMusic.play();
+                        musicControl.classList.add('playing');
+                        document.removeEventListener('click', playOnce);
+                    }, { once: true });
+                });
+            }
+        });
+
+        // Music control
+        musicControl.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (backgroundMusic.paused) {
+                backgroundMusic.play();
+                musicControl.classList.add('playing');
+                sessionStorage.setItem('musicPlaying', 'true');
+            } else {
+                backgroundMusic.pause();
+                musicControl.classList.remove('playing');
+                sessionStorage.setItem('musicPlaying', 'false');
+            }
+        });
+
+        // Update music time periodically
+        setInterval(() => {
+            if (!backgroundMusic.paused) {
+                sessionStorage.setItem('musicTime', backgroundMusic.currentTime);
+            }
+        }, 1000);
+
+        
+
+        backgroundMusic.volume = 0.6;
+
+        // ============ ENHANCED FIREWORKS ANIMATION ============
+        const fireworksCanvas = document.getElementById('fireworksCanvas');
+        const fCtx = fireworksCanvas.getContext('2d');
+        fireworksCanvas.width = window.innerWidth;
+        fireworksCanvas.height = window.innerHeight;
+
+        let fireworks = [];
+        let particles = [];
+
+        class Firework {
+            constructor(targetX, targetY) {
+                this.x = targetX || Math.random() * fireworksCanvas.width;
+                this.y = fireworksCanvas.height;
+                this.targetY = targetY || Math.random() * fireworksCanvas.height * 0.5;
+                this.speed = Math.random() * 3 + 3;
+                this.color = `hsl(${Math.random() * 360}, 100%, 60%)`;
+                this.exploded = false;
+                this.trail = [];
+            }
+
+            update() {
+                if (!this.exploded) {
+                    this.trail.push({ x: this.x, y: this.y, alpha: 1 });
+                    if (this.trail.length > (isMobile ? 5 : 10)) this.trail.shift();
+                    
+                    this.y -= this.speed;
+                    if (this.y <= this.targetY) {
+                        this.explode();
+                        this.exploded = true;
+                    }
+                }
+            }
+
+            draw() {
+                if (!this.exploded) {
+                    this.trail.forEach((point, index) => {
+                        fCtx.beginPath();
+                        fCtx.arc(point.x, point.y, 2, 0, Math.PI * 2);
+                        fCtx.fillStyle = this.color;
+                        fCtx.globalAlpha = point.alpha * (index / this.trail.length);
+                        fCtx.fill();
+                    });
+                    
+                    fCtx.globalAlpha = 1;
+                    fCtx.beginPath();
+                    fCtx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+                    fCtx.fillStyle = this.color;
+                    fCtx.fill();
+                }
+            }
+
+            explode() {
+                const particleCount = isMobile ? (isSmallMobile ? 40 : 60) : 80;
+                for (let i = 0; i < particleCount; i++) {
+                    particles.push(new Particle(this.x, this.y, this.color));
+                }
+            }
+        }
+
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 6 + 2;
+                this.vx = Math.cos(angle) * speed;
+                this.vy = Math.sin(angle) * speed;
+                this.gravity = 0.15;
+                this.friction = 0.98;
+                this.alpha = 1;
+                this.decay = Math.random() * 0.015 + 0.01;
+            }
+
+            update() {
+                this.vx *= this.friction;
+                this.vy *= this.friction;
+                this.vy += this.gravity;
+                this.x += this.vx;
+                this.y += this.vy;
+                this.alpha -= this.decay;
+            }
+
+            draw() {
+                fCtx.save();
+                fCtx.globalAlpha = this.alpha;
+                fCtx.beginPath();
+                fCtx.arc(this.x, this.y, 2.5, 0, Math.PI * 2);
+                fCtx.fillStyle = this.color;
+                fCtx.fill();
+                fCtx.restore();
+            }
+        }
+
+        function animateFireworks() {
+            fCtx.fillStyle = 'rgba(26, 0, 51, 0.1)';
+            fCtx.fillRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
+
+            const spawnRate = isMobile ? (isSmallMobile ? 0.04 : 0.06) : 0.08;
+            if (Math.random() < spawnRate) {
+                fireworks.push(new Firework());
+            }
+
+            fireworks = fireworks.filter(fw => !fw.exploded);
+            fireworks.forEach(fw => {
+                fw.update();
+                fw.draw();
+            });
+
+            particles = particles.filter(p => p.alpha > 0);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+
+            requestAnimationFrame(animateFireworks);
+        }
+
+        animateFireworks();
+
+        // ============ FLOWERS ANIMATION ============
+        const flowersCanvas = document.getElementById('flowersCanvas');
+        const flCtx = flowersCanvas.getContext('2d');
+        flowersCanvas.width = window.innerWidth;
+        flowersCanvas.height = window.innerHeight;
+
+        class Flower {
+            constructor() {
+                this.reset();
+            }
+            
+            reset() {
+                this.x = Math.random() * flowersCanvas.width;
+                this.y = -50;
+                this.size = Math.random() * (isMobile ? 15 : 20) + (isMobile ? 10 : 15);
+                this.speed = Math.random() * 1 + 0.5;
+                this.rotation = Math.random() * Math.PI * 2;
+                this.rotationSpeed = (Math.random() - 0.5) * 0.02;
+                this.petalCount = Math.floor(Math.random() * 3) + 5;
+                this.color = ['#FFB6C1', '#FF69B4', '#FFC0CB', '#FF1493', '#FFD700'][Math.floor(Math.random() * 5)];
+                this.swing = Math.random() * 2;
+                this.swingSpeed = Math.random() * 0.02 + 0.01;
+            }
+
+            update() {
+                this.y += this.speed;
+                this.rotation += this.rotationSpeed;
+                this.swing += this.swingSpeed;
+                this.x += Math.sin(this.swing) * 0.5;
+
+                if (this.y > flowersCanvas.height + 50) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                flCtx.save();
+                flCtx.translate(this.x, this.y);
+                flCtx.rotate(this.rotation);
+
+                for (let i = 0; i < this.petalCount; i++) {
+                    flCtx.save();
+                    flCtx.rotate((Math.PI * 2 / this.petalCount) * i);
+                    flCtx.beginPath();
+                    flCtx.ellipse(this.size * 0.6, 0, this.size * 0.4, this.size * 0.2, 0, 0, Math.PI * 2);
+                    flCtx.fillStyle = this.color;
+                    flCtx.fill();
+                    flCtx.restore();
+                }
+
+                flCtx.beginPath();
+                flCtx.arc(0, 0, this.size * 0.3, 0, Math.PI * 2);
+                flCtx.fillStyle = '#FFD700';
+                flCtx.fill();
+
+                flCtx.restore();
+            }
+        }
+
+        let flowers = [];
+        const flowerCount = isMobile ? (isSmallMobile ? 10 : 15) : 20;
+        for (let i = 0; i < flowerCount; i++) {
+            flowers.push(new Flower());
+        }
+
+        function animateFlowers() {
+            flCtx.clearRect(0, 0, flowersCanvas.width, flowersCanvas.height);
+
+            flowers.forEach(flower => {
+                flower.update();
+                flower.draw();
+            });
+
+            requestAnimationFrame(animateFlowers);
+        }
+
+        animateFlowers();
+
+        // ============ CONFETTI ANIMATION ============
+        const confettiCanvas = document.getElementById('confettiCanvas');
+        const cCtx = confettiCanvas.getContext('2d');
+        confettiCanvas.width = window.innerWidth;
+        confettiCanvas.height = window.innerHeight;
+
+        class Confetti {
+            constructor() {
+                this.reset();
+            }
+            
+            reset() {
+                this.x = Math.random() * confettiCanvas.width;
+                this.y = -20;
+                this.size = Math.random() * (isMobile ? 6 : 8) + (isMobile ? 3 : 4);
+                this.speed = Math.random() * 2 + 1;
+                this.rotation = Math.random() * Math.PI * 2;
+                this.rotationSpeed = (Math.random() - 0.5) * 0.1;
+                this.color = ['#FFD700', '#FF69B4', '#00CED1', '#FF6347', '#7B68EE', '#32CD32'][Math.floor(Math.random() * 6)];
+                this.swing = Math.random() * 2;
+                this.swingSpeed = Math.random() * 0.03 + 0.01;
+            }
+
+            update() {
+                this.y += this.speed;
+                this.rotation += this.rotationSpeed;
+                this.swing += this.swingSpeed;
+                this.x += Math.sin(this.swing) * 1;
+
+                if (this.y > confettiCanvas.height + 20) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                cCtx.save();
+                cCtx.translate(this.x, this.y);
+                cCtx.rotate(this.rotation);
+                cCtx.fillStyle = this.color;
+                cCtx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+                cCtx.restore();
+            }
+        }
+
+        let confetti = [];
+        const confettiCount = isMobile ? (isSmallMobile ? 25 : 35) : 50;
+        for (let i = 0; i < confettiCount; i++) {
+            confetti.push(new Confetti());
+        }
+
+        function animateConfetti() {
+            cCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+
+            confetti.forEach(piece => {
+                piece.update();
+                piece.draw();
+            });
+
+            requestAnimationFrame(animateConfetti);
+        }
+
+        animateConfetti();
+
+        // ============ FLOATING PARTICLES & SPARKLES ============
+        function createParticles() {
+            const particleContainer = document.body;
+            const particleCount = isMobile ? (isSmallMobile ? 15 : 20) : 30;
+            const sparkleCount = isMobile ? (isSmallMobile ? 10 : 15) : 20;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+                particleContainer.appendChild(particle);
+            }
+
+            for (let i = 0; i < sparkleCount; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.classList.add('sparkle');
+                sparkle.style.left = Math.random() * 100 + '%';
+                sparkle.style.animationDelay = Math.random() * 4 + 's';
+                sparkle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                particleContainer.appendChild(sparkle);
+            }
+        }
+
+        createParticles();
+
+        // ============ HANDLE WINDOW RESIZE ============
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                fireworksCanvas.width = window.innerWidth;
+                fireworksCanvas.height = window.innerHeight;
+                flowersCanvas.width = window.innerWidth;
+                flowersCanvas.height = window.innerHeight;
+                confettiCanvas.width = window.innerWidth;
+                confettiCanvas.height = window.innerHeight;
+            }, 250);
+        });
+
+        // ============ CLICK TO CREATE FIREWORKS ============
+        let lastClickTime = 0;
+        document.addEventListener('click', (e) => {
+            if (e.target.tagName !== 'A' && e.target.tagName !== 'BUTTON') {
+                const now = Date.now();
+                // Throttle clicks on mobile to improve performance
+                if (!isMobile || now - lastClickTime > 500) {
+                    const clickCount = isMobile ? (isSmallMobile ? 2 : 3) : 3;
+                    for (let i = 0; i < clickCount; i++) {
+                        const firework = new Firework(
+                            e.clientX + (Math.random() - 0.5) * 50,
+                            e.clientY + (Math.random() - 0.5) * 50
+                        );
+                        fireworks.push(firework);
+                    }
+                    lastClickTime = now;
+                }
+            }
+        });
+
+        // Touch event for mobile
+        document.addEventListener('touchstart', (e) => {
+            if (e.target.tagName !== 'A' && e.target.tagName !== 'BUTTON') {
+                const now = Date.now();
+                if (now - lastClickTime > 500) {
+                    const touch = e.touches[0];
+                    const clickCount = isSmallMobile ? 2 : 3;
+                    for (let i = 0; i < clickCount; i++) {
+                        const firework = new Firework(
+                            touch.clientX + (Math.random() - 0.5) * 40,
+                            touch.clientY + (Math.random() - 0.5) * 40
+                        );
+                        fireworks.push(firework);
+                    }
+                    lastClickTime = now;
+                }
+            }
+        }, { passive: true });
+    </script>
+</body>
+</html>
